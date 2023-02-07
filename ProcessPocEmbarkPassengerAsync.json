@@ -1,0 +1,76 @@
+{
+    "trxDate": 1675803710,
+    "trxStateId": 3,
+    "pocBcbp": {
+        "name": "DIANA I",
+        "lastname": "DOMINGUEZ MA",
+        "seatLetter": "F",
+        "seatNumber": "301",
+        "airlineIataCode": "AR",
+        "flightNumber": "1383",
+        "date": "07/02/2023",
+        "stdaJul": 38,
+        "stda": 1675818900,
+        "code2D": "M1DOMINGUEZ MA/DIANA I        MVDAEPAR 1383 38  301F        ",
+        "pocDateTime": 1675803710,
+        "runwayId": "POC_1",
+        "bcbpLastUpdate": 1675803712
+    },
+    "runway": {
+        "id": 1,
+        "runwayId": "POC_1",
+        "runwayLocation": {
+            "id": 1,
+            "name": "Runway_1",
+            "type": "POC",
+            "arrivalsDeparture": "D",
+            "terminal": {
+                "id": 1,
+                "name": "AIC - Comercial",
+                "airport": {
+                    "id": 1,
+                    "name": "Montevideo",
+                    "nameISO": "MVD"
+                }
+            }
+        }
+    }
+},
+{
+    "trxDate": 1675803823,
+    "trxStateId": 3,
+    "pocBcbp": {
+        "name": "ALELI DE",
+        "lastname": "GARCIA RUIZ",
+        "seatLetter": "F",
+        "seatNumber": "302",
+        "airlineIataCode": "AR",
+        "flightNumber": "1383",
+        "date": "07/02/2023",
+        "stdaJul": 38,
+        "stda": 1675818900,
+        "code2D": "M1GARCIA RUIZ/ALELI DE        MVDAEPAR 1383 38  302F        ",
+        "pocDateTime": 1675803823,
+        "runwayId": "POC_1",
+        "bcbpLastUpdate": 1675803824
+    },
+    "runway": {
+        "id": 1,
+        "runwayId": "POC_1",
+        "runwayLocation": {
+            "id": 1,
+            "name": "Runway_1",
+            "type": "POC",
+            "arrivalsDeparture": "D",
+            "terminal": {
+                "id": 1,
+                "name": "AIC - Comercial",
+                "airport": {
+                    "id": 1,
+                    "name": "Montevideo",
+                    "nameISO": "MVD"
+                }
+            }
+        }
+    }
+}

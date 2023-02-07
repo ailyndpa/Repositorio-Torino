@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "cd8741b4-25bc-42bc-b575-c4a3ff60d7aa",
+		"name": "Torino",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24313612"
+	},
+	"item": [
+		{
+			"name": "ProcessPocEmbarkPassenger",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"trxDate\": 1657737131,\r\n  \"trxStateId\": 3,\r\n  \"trxState\": {\r\n    \"id\": 3,\r\n    \"description\": \"Confirmado\"\r\n  },\r\n  \"pocBcbp\": {\r\n    \"name\": \"DIANA I\",\r\n    \"lastname\": \"DOMINGUEZ MA\",\r\n    \"seatLetter\": \"F\",\r\n    \"seatNumber\": \"301\",\r\n    \"airlineIataCode\": \"AF\",\r\n    \"flightNumber\": \"8741\",\r\n    \"date\": \"1657737131\",\r\n    \"stdaJul\": 194,\r\n    \"stda\": 1657735800,\r\n    \"code2D\": \"M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307F        \",\r\n    \"pocDateTime\": 1657737128,\r\n    \"runwayId\": \"POC_1\",\r\n    \"bcbpLastUpdate\": 1657737128,\r\n    \"vipCode\": \"string\"\r\n  },\r\n  \"runway\": {\r\n    \"id\": POC_1,\r\n    \"runwayId\": \"POC_1\",\r\n    \"runwayLocation\": {\r\n      \"id\": POC_1,\r\n      \"name\": \"POC_1\",\r\n      \"type\": \"POC_1\",\r\n      \"arrivalsDeparture\": \"GRU\",\r\n      \"terminal\": {\r\n        \"id\": 1,\r\n        \"name\": \"string\",\r\n        \"airport\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\",\r\n          \"nameISO\": \"MVD\"\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName=qa",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessPocEmbarkPassenger"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "qa"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ProcessPocEmbarkPassenger",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"trxDate\": 1657737131,\r\n  \"trxStateId\": 3,\r\n  \"trxState\": {\r\n    \"id\": 3,\r\n    \"description\": \"Confirmado\"\r\n  },\r\n  \"pocBcbp\": {\r\n    \"name\": \"DIANA I\",\r\n    \"lastname\": \"DOMINGUEZ MA\",\r\n    \"seatLetter\": \"F\",\r\n    \"seatNumber\": \"301\",\r\n    \"airlineIataCode\": \"AF\",\r\n    \"flightNumber\": \"8741\",\r\n    \"date\": \"1657737131\",\r\n    \"stdaJul\": 194,\r\n    \"stda\": 1657735800,\r\n    \"code2D\": \"string\",\r\n    \"pocDateTime\": 1657737128,\r\n    \"runwayId\": \"POC_1\",\r\n    \"bcbpLastUpdate\": M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307F        ,\r\n    \"vipCode\": \"string\"\r\n  },\r\n  \"runway\": {\r\n    \"id\": POC_1,\r\n    \"runwayId\": \"POC_1\",\r\n    \"runwayLocation\": {\r\n      \"id\": POC_1,\r\n      \"name\": \"POC_1\",\r\n      \"type\": \"POC_1\",\r\n      \"arrivalsDeparture\": \"GRU\",\r\n      \"terminal\": {\r\n        \"id\": 1,\r\n        \"name\": \"string\",\r\n        \"airport\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\",\r\n          \"nameISO\": \"MVD\"\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName=qa",
+							"host": [
+								"{{torino.url}}"
+							],
+							"path": [
+								"api",
+								"MatchAndSimilarNames",
+								"ProcessPocEmbarkPassenger"
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "qa"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.5"
+						},
+						{
+							"key": "GUID",
+							"value": "799d910a-2dc8-45a6-b828-b7105e660a5e"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ARR/3.0"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Feb 2023 20:21:43 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "176"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"insertBcbp\": null,\n        \"updateBcbp\": null,\n        \"existAndNotUpdateBcbp\": null\n    },\n    \"guid\": \"799d910a-2dc8-45a6-b828-b7105e660a5e\",\n    \"code\": 0,\n    \"message\": \"Transacción ejecutada con éxito\"\n}"
+				}
+			]
+		}
+	]
+}
