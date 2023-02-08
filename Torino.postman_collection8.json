@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "cd8741b4-25bc-42bc-b575-c4a3ff60d7aa",
+		"name": "Torino",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24313612"
+	},
+	"item": [
+		{
+			"name": "ProcessPocEmbarkPassenger",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"jsonData\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codePocEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messagePocEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"/**validates that there is no response data */\r",
+							"if (data.stda == null || data.stda == \"\" || data.stda == \"abcdefghij\" || data.stda == \"><*/+-!$()\" || data.stda == \"1.5\") {\r",
+							"    pm.test(\"Validates that there is no response data\", () => {\r",
+							"    pm.expect(jsonData.data.insertBcbp).to.eq(null);\r",
+							"    pm.expect(jsonData.data.updateBcbp).to.eq(null);\r",
+							"    pm.expect(jsonData.data.existAndNotUpdateBcbp).to.eq(null);\r",
+							"})\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pocBcbp\": {\r\n    \"name\": \"{{name}}\",\r\n    \"lastname\": \"{{lastname}}\",\r\n    \"seatLetter\": \"{{seatLetter}}\",\r\n    \"seatNumber\": \"{{seatNumber}}\",\r\n    \"airlineIataCode\": \"{{airlineIataCode}}\",\r\n    \"flightNumber\": \"{{flightNumber}}\",\r\n    \"date\": \"{{date}}\",\r\n    \"stdaJul\": {{stdaJul}},\r\n    \"stda\": {{stda}},\r\n    \"code2D\": \"{{code2D}}\",\r\n    \"pocDateTime\": {{pocDateTime}},\r\n    \"runwayId\": \"{{runwayId}}\",\r\n    \"bcbpLastUpdate\": {{bcbpLastUpdate}}\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessPocEmbarkPassenger"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ProcessPocEmbarkPassenger",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pocBcbp\": {\r\n    \"name\": \"DIANA I\",\r\n    \"lastname\": \"DOMINGUEZ MA\",\r\n    \"seatLetter\": \"S\",\r\n    \"seatNumber\": \"301\",\r\n    \"airlineIataCode\": \"AF\",\r\n    \"flightNumber\": \"8741\",\r\n    \"date\": \"1657737131\",\r\n    \"stdaJul\": 194,\r\n    \"stda\": 1657735800,\r\n    \"code2D\": \"M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307S        \",\r\n    \"pocDateTime\": 1657737128,\r\n    \"runwayId\": \"POC_1\",\r\n    \"bcbpLastUpdate\": 1657737128\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName=QA",
+							"host": [
+								"{{torino.url}}"
+							],
+							"path": [
+								"api",
+								"MatchAndSimilarNames",
+								"ProcessPocEmbarkPassenger"
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "QA"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.5"
+						},
+						{
+							"key": "GUID",
+							"value": "8ea39ddf-a744-47b8-a7a6-844e67d8d900"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ARR/3.0"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 08 Feb 2023 13:31:40 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1078"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"insertBcbp\": {\n            \"id\": 0,\n            \"name\": null,\n            \"lastname\": null,\n            \"seatLetter\": null,\n            \"seatNumber\": null,\n            \"airlineIataCode\": null,\n            \"flightNumber\": null,\n            \"date\": null,\n            \"stdaJul\": 0,\n            \"stda\": 0,\n            \"code2D\": null,\n            \"pocDateTime\": 0,\n            \"runwayId\": null,\n            \"bcbpLastUpdate\": 0,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 0\n        },\n        \"updateBcbp\": {\n            \"id\": 30379,\n            \"name\": \"VALERIA\",\n            \"lastname\": \"LOPEZ BARRAG\",\n            \"seatLetter\": \"S\",\n            \"seatNumber\": \"307\",\n            \"airlineIataCode\": \"AF\",\n            \"flightNumber\": \"8741\",\n            \"date\": \"13/07/2022 15:10:00\",\n            \"stdaJul\": 194,\n            \"stda\": 1657735800,\n            \"code2D\": \"M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307S        \",\n            \"pocDateTime\": 1657737128,\n            \"runwayId\": \"POC_1\",\n            \"bcbpLastUpdate\": 1657737128,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 1675905697\n        },\n        \"existAndNotUpdateBcbp\": {\n            \"id\": 0,\n            \"name\": null,\n            \"lastname\": null,\n            \"seatLetter\": null,\n            \"seatNumber\": null,\n            \"airlineIataCode\": null,\n            \"flightNumber\": null,\n            \"date\": null,\n            \"stdaJul\": 0,\n            \"stda\": 0,\n            \"code2D\": null,\n            \"pocDateTime\": 0,\n            \"runwayId\": null,\n            \"bcbpLastUpdate\": 0,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 0\n        }\n    },\n    \"guid\": \"8ea39ddf-a744-47b8-a7a6-844e67d8d900\",\n    \"code\": 0,\n    \"message\": \"Transacción ejecutada con éxito\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"/**I assign the values to the parameters of the url from the json file*/",
+					"const keys = Object.keys(data);",
+					"keys.map((key) => {",
+					"    pm.environment.set(key, data[key]);",
+					"})",
+					"pm.environment.unset(\"_services\");",
+					"pm.environment.unset(\"_comment\");",
+					"pm.environment.unset(\"index\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

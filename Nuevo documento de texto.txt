@@ -1,0 +1,13 @@
+name> Name
+lastname> Lastname
+seatLetter> Letter
+seatNumber> Number
+airlineIataCode> IataCode
+flightNumber> NrFlight
+date> dd/mm/aaaa (OriginDate)
+stdaJul> StdaJul
+stda> Stda
+code2D> Bcbp
+pocDateTime> OriginDate
+runwayId> RunwayId
+bcbpLastUpdate> ModifyDate
