@@ -307,12 +307,12 @@
         "date": "01/01/2023 08:00:00",
         "stdaJul": 1,
         "stda": "1672561800",
-        "code2D": "M1UNWAYID VACÍ/TEST15         MVDPTYAF 8741 1   015A        ",
+        "code2D": "M1RUNWAYID VAC/TEST15         MVDPTYAF 8741 1   015A        ",
         "pocDateTime": "1672560000",
         "runwayId": "",
         "bcbpLastUpdate": "1672560000",
-        "messagePocEmbark": "Campo idRunway requerido",
-        "codePocEmbark": "8"
+        "messagePocEmbark": "Transacción ejecutada con éxito",
+        "codePocEmbark": "0"
     },
     {
         "_services": "ProcessPocEmbarkPassenger",
@@ -328,12 +328,12 @@
         "date": "01/01/2023 08:00:00",
         "stdaJul": 1,
         "stda": "1672561800",
-        "code2D": "M1UNWAYID NO D/TEST16         MVDPTYAF 8741 1   016A        ",
+        "code2D": "M1RUNWAYID NO /TEST16         MVDPTYAF 8741 1   016A        ",
         "pocDateTime": "1672560000",
         "runwayId": "POC",
         "bcbpLastUpdate": "1672560000",
-        "messagePocEmbark": "Campo idRunway requerido",
-        "codePocEmbark": "8"
+        "messagePocEmbark": "Transacción ejecutada con éxito",
+        "codePocEmbark": "0"
     },
     {
         "_services": "ProcessPocEmbarkPassenger",
