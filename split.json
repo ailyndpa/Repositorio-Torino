@@ -1,0 +1,15 @@
+[
+	{
+        "_services": "ProcessPocEmbarkPassenger",
+        "_comment": "Validando respuestas adecuada para runwayId no definido",
+        "index": 16,
+        "userName": "QA",
+        "stda": "1672561800",
+        "code2D": "M1RUNWAYID NO /TEST16         MVDPTYAF 8741 1   016A        ",
+        "pocDateTime": "1672560000",
+        "runwayId": "POC",
+        "bcbpLastUpdate": "1672560000",
+        "messagePocEmbark": "Transacción ejecutada con éxito",
+        "codePocEmbark": "0"
+    }
+]
