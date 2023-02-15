@@ -1,0 +1,4 @@
+
+DEVUELVE INFORMACIÓN A PARTIR DE UN REDONDEO QUE REALIZA AL stda.
+
+OJO: La información que se muestra en la respuesta asociada a stda = 2 no aparece en la base de datos, por lo cual no debería devolver información del pasajero
