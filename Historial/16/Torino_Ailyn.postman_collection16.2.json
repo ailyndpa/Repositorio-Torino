@@ -1,0 +1,1298 @@
+{
+	"info": {
+		"_postman_id": "bb151f01-9b4b-4a18-82da-5f9c3563f2b2",
+		"name": "Torino_Ailyn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24382044"
+	},
+	"item": [
+		{
+			"name": "ProcessPocEmbarkPassenger",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codePocEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messagePocEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"if (data.codePocEmbark == 0) {\r",
+							"\r",
+							"    const unixTimestamp = new Date((pm.environment.get(\"pocDateTime\")) * 1000); //multiply 1000 converts Unix  to JavaScript \r",
+							"    const getHours = String(unixTimestamp.getHours()).padStart(2, '0');\r",
+							"    const getMin = String(unixTimestamp.getMinutes()).padStart(2, '0');\r",
+							"    const getSec = String(unixTimestamp.getSeconds()).padStart(2, '0');\r",
+							"    const getday = String(unixTimestamp.getDate()).padStart(2, '0');\r",
+							"    const getMonth = String(unixTimestamp.getMonth() + 1).padStart(2, '0');\r",
+							"\r",
+							"    // console.log(\"--------------------------------------------------------\");\r",
+							"\r",
+							"    // console.log(\"pocDateTime\", pm.environment.get(\"pocDateTime\"));\r",
+							"    // console.log(\"stda\", pm.environment.get(\"stda\"));\r",
+							"\r",
+							"    /**I save the resulting values in the environment for later use in the CheckDocument service*/\r",
+							"\r",
+							"    code2D = pm.environment.get(\"code2Dcode2D\");\r",
+							"    // console.log(\"code2Dcode2D DÍA ACTUAL: \", code2D);\r",
+							"\r",
+							"    const name = code2D.split('/')[1].split(' ')[0];\r",
+							"    pm.environment.set(\"name\", name);\r",
+							"    // console.log(\"name\", pm.environment.get(\"name\"));\r",
+							"\r",
+							"    const lastName = code2D.split('1')[1].split('/')[0];\r",
+							"    pm.environment.set(\"lastName\", lastName);\r",
+							"    // console.log(\"lastName\", pm.environment.get(\"lastName\"));\r",
+							"\r",
+							"    const seatNumber = code2D.split('8741')[1].split('A')[0].split(' ')[3];\r",
+							"    //console.log(\"seatNumber\", seatNumber);\r",
+							"\r",
+							"    const seatLetter = code2D.split('8741')[1].split(`${seatNumber}`)[1].split(' ')[0];\r",
+							"    // console.log(\"seatLetter\", seatLetter);\r",
+							"\r",
+							"    const seatCode = code2D.split('8741')[1].split(' ')[3];\r",
+							"    pm.environment.set(\"seatCode\", seatCode);\r",
+							"    //console.log(\"seatCode\", pm.environment.get(\"seatCode\"));\r",
+							"\r",
+							"    const airlineIataCode = code2D.split('MVDPTY')[1].split(' ')[0];\r",
+							"    pm.environment.set(\"airlineIataCode\", airlineIataCode);\r",
+							"    // console.log(\"airlineIataCode\", pm.environment.get(\"airlineIataCode\"));\r",
+							"\r",
+							"    const splitFlightCode = code2D.split('MVDPTY')[1].split(' ');\r",
+							"    flightCode1 = splitFlightCode[0];\r",
+							"    flightCode2 = splitFlightCode[1];\r",
+							"    flightCode = flightCode1 + \" \" + flightCode2;\r",
+							"    pm.environment.set(\"flightCode\", flightCode);\r",
+							"    // console.log(\"flightCode\", pm.environment.get(\"flightCode\"));\r",
+							"\r",
+							"    const flightNumber = code2D.split('MVDPTY')[1].split(' ')[1];\r",
+							"    pm.environment.set(\"flightNumber\", flightNumber);\r",
+							"    //console.log(\"flightNumber\", pm.environment.get(\"flightNumber\"));\r",
+							"\r",
+							"    const date = (getday + \"/\" + getMonth + \"/\" + unixTimestamp.getFullYear() + \" \" + getHours + \":\" + getMin + \":\" + getSec);\r",
+							"    pm.environment.set(\"date\", date);\r",
+							"    // console.log(\"date\", pm.environment.get(\"date\"));\r",
+							"\r",
+							"    const stdaJul = code2D.split('8741 ')[1].split(' ')[0];\r",
+							"    //console.log(\"stdaJul\", stdaJul);\r",
+							"\r",
+							"    /**Verifying that the data sent in the body of the request are the same as those returned in the body of the response.*/\r",
+							"    pm.test(\"validate that the response message is the one I am expecting in the js for the current iteration\", () => {\r",
+							"\r",
+							"        /**If the passenger is inserted verify the data in insertBcbp*/\r",
+							"        if (jsonData.data.insertBcbp.id != 0) {\r",
+							"            pass = jsonData.data.insertBcbp;\r",
+							"        } else {\r",
+							"            pass = jsonData.data.updateBcbp;\r",
+							"        }\r",
+							"        pm.expect(pass.name).to.eq(name);\r",
+							"        pm.expect(pass.lastname).to.eq(lastName);\r",
+							"        pm.expect(pass.seatLetter).to.eq(seatLetter);\r",
+							"        pm.expect(pass.seatNumber).to.eq(seatNumber);\r",
+							"        pm.expect(pass.airlineIataCode).to.eq(airlineIataCode);\r",
+							"        pm.expect(pass.flightNumber).to.eq(flightNumber);\r",
+							"        pm.expect(pass.date).to.eq(date);\r",
+							"        pm.expect(pass.stdaJul.toString()).to.eq(stdaJul.toString());\r",
+							"        pm.expect(pass.stda.toString()).to.eq(data.stda.toString());\r",
+							"        pm.expect(pass.code2D).to.eq(pm.environment.get(\"code2D\"));\r",
+							"        pm.expect(pass.pocDateTime.toString()).to.eq(data.pocDateTime.toString());\r",
+							"        pm.expect(pass.runwayId).to.eq(data.runwayId.toLowerCase());\r",
+							"        pm.expect(pass.bcbpLastUpdate).to.eq(data.bcbpLastUpdate.toString());\r",
+							"    })\r",
+							"}\r",
+							"(data.userName == null || data.userName == \"\" || data.codePocEmbark == 0) ? postman.setNextRequest(\"ProcessDocumentEmbarkPassenger\") : postman.setNextRequest(null)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"data.index: \", data.index);\r",
+							"\r",
+							"const today = Math.floor(new Date().getTime() / 1000.0);\r",
+							"\r",
+							"if (!!data.validPocDateTime) {\r",
+							"    pm.environment.set(\"pocDateTime\", data.pocDateTime);\r",
+							"} else {\r",
+							"    /**I keep the time when the passenger passed through poc*/\r",
+							"    pm.environment.set(\"pocDateTime\", today);\r",
+							"}\r",
+							"\r",
+							"if (!!data.validStda) {\r",
+							"    pm.environment.set(\"stda\", data.stda);\r",
+							"} else {\r",
+							"    /**I specify the flight for 5:00 p.m. on the current day*/\r",
+							"    const now = new Date();\r",
+							"    const stda = Math.floor(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0, 0) / 1000.0);\r",
+							"    pm.environment.set(\"stda\", stda);\r",
+							"}\r",
+							"if (!!data.validCode2D) {\r",
+							"    code2D = data.code2D;\r",
+							"} else {\r",
+							"    /**Gets the Julian day of the current year*/\r",
+							"    const now = Date.now();\r",
+							"    const startOfYear = new Date(new Date().getFullYear(), 0, 1);\r",
+							"    const julianDay = Math.ceil((now - startOfYear) / 86400000);\r",
+							"\r",
+							"    /**Change the stdaJul in the code2D of the json*/\r",
+							"    splitcode2D = data.code2D.split(' 1   ');\r",
+							"    //console.log(\"splitcode2D\", splitcode2D);\r",
+							"\r",
+							"    code2D1 = splitcode2D[0];\r",
+							"    code2D2 = splitcode2D[1];\r",
+							"    code2D = code2D1 + \" \" + julianDay.toString().padEnd(3, \" \") + \" \" + code2D2;\r",
+							"}\r",
+							"pm.environment.set(\"code2Dcode2D\", code2D);\r",
+							"//console.log(\"code2Dcode2D DÍA ACTUAL: \", pm.environment.get(\"code2Dcode2D\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pocBcbp\": {\r\n        \"stda\": {{stda}},\r\n        \"code2D\": \"{{code2Dcode2D}}\",\r\n        \"pocDateTime\": {{pocDateTime}},\r\n        \"runwayId\": \"{{runwayId}}\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessPocEmbarkPassenger"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ProcessPocEmbarkPassenger",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pocBcbp\": {\r\n    \"name\": \"DIANA I\",\r\n    \"lastname\": \"DOMINGUEZ MA\",\r\n    \"seatLetter\": \"S\",\r\n    \"seatNumber\": \"301\",\r\n    \"airlineIataCode\": \"AF\",\r\n    \"flightNumber\": \"8741\",\r\n    \"date\": \"1657737131\",\r\n    \"stdaJul\": 194,\r\n    \"stda\": 1657735800,\r\n    \"code2D\": \"M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307S        \",\r\n    \"pocDateTime\": 1657737128,\r\n    \"runwayId\": \"POC_1\",\r\n    \"bcbpLastUpdate\": 1657737128\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessPocEmbarkPassenger?userName=QA",
+							"host": [
+								"{{torino.url}}"
+							],
+							"path": [
+								"api",
+								"MatchAndSimilarNames",
+								"ProcessPocEmbarkPassenger"
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "QA"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Microsoft-IIS/8.5"
+						},
+						{
+							"key": "GUID",
+							"value": "8ea39ddf-a744-47b8-a7a6-844e67d8d900"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ASP.NET"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "ARR/3.0"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 08 Feb 2023 13:31:40 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1078"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"insertBcbp\": {\n            \"id\": 0,\n            \"name\": null,\n            \"lastname\": null,\n            \"seatLetter\": null,\n            \"seatNumber\": null,\n            \"airlineIataCode\": null,\n            \"flightNumber\": null,\n            \"date\": null,\n            \"stdaJul\": 0,\n            \"stda\": 0,\n            \"code2D\": null,\n            \"pocDateTime\": 0,\n            \"runwayId\": null,\n            \"bcbpLastUpdate\": 0,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 0\n        },\n        \"updateBcbp\": {\n            \"id\": 30379,\n            \"name\": \"VALERIA\",\n            \"lastname\": \"LOPEZ BARRAG\",\n            \"seatLetter\": \"S\",\n            \"seatNumber\": \"307\",\n            \"airlineIataCode\": \"AF\",\n            \"flightNumber\": \"8741\",\n            \"date\": \"13/07/2022 15:10:00\",\n            \"stdaJul\": 194,\n            \"stda\": 1657735800,\n            \"code2D\": \"M1LOPEZ BARRAG/VALERIA        MVDGRUAF 8741 194 307S        \",\n            \"pocDateTime\": 1657737128,\n            \"runwayId\": \"POC_1\",\n            \"bcbpLastUpdate\": 1657737128,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 1675905697\n        },\n        \"existAndNotUpdateBcbp\": {\n            \"id\": 0,\n            \"name\": null,\n            \"lastname\": null,\n            \"seatLetter\": null,\n            \"seatNumber\": null,\n            \"airlineIataCode\": null,\n            \"flightNumber\": null,\n            \"date\": null,\n            \"stdaJul\": 0,\n            \"stda\": 0,\n            \"code2D\": null,\n            \"pocDateTime\": 0,\n            \"runwayId\": null,\n            \"bcbpLastUpdate\": 0,\n            \"vipCode\": null,\n            \"deleted\": false,\n            \"expiration\": 0\n        }\n    },\n    \"guid\": \"8ea39ddf-a744-47b8-a7a6-844e67d8d900\",\n    \"code\": 0,\n    \"message\": \"Transacción ejecutada con éxito\"\n}"
+				}
+			]
+		},
+		{
+			"name": "ProcessDocumentEmbarkPassenger",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"----------------------------------------------------\")\r",
+							"console.log(\"dnmDateTime\", pm.environment.get(\"dnmDateTime\"));\r",
+							"console.log(\"code2D\", pm.environment.get(\"code2Dcode2D\"));\r",
+							"console.log(\"ProcessDocumentEmbarkPassenger\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeDocumentEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageDocumentEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"if (data.codePocEmbark == 0 && data.codeDocumentEmbark == 0) {\r",
+							"\r",
+							"    /**Verifying that the data sent in the body of the request are the same as those returned in the body of the response*/\r",
+							"    pm.test(\"validate that the response message is the one I am expecting in the js for the current iteration\", () => {\r",
+							"\r",
+							"        /**If the passenger is inserted verify the data in insertBcbp*/\r",
+							"        if (jsonData.data.insertDocument.id != 0) {\r",
+							"            pass = jsonData.data.insertDocument;\r",
+							"            pm.expect(pass.dnmDateTime).to.eq(pm.environment.get(\"dnmDateTime\"));\r",
+							"        } else if (jsonData.data.updateDocument.id != 0) {\r",
+							"            pass = jsonData.data.updateDocument;\r",
+							"            pm.expect(pass.dnmDateTime).to.eq(pm.environment.get(\"dnmDateTime\"));\r",
+							"        } else {\r",
+							"            pass = jsonData.data.existAndNotUpdateDocument;\r",
+							"        }\r",
+							"        pm.expect(pass.moveId).to.eq(pm.environment.get(\"moveId\"));\r",
+							"        pm.expect(pass.airlineIataCode).to.eq(pm.environment.get(\"airlineIataCode\"));\r",
+							"        pm.expect(pass.flightNumber).to.eq(pm.environment.get(\"flightNumber\"));\r",
+							"        pm.expect(pass.moveType).to.eq(pm.environment.get(\"moveType\"));\r",
+							"        pm.expect(pass.name).to.eq(pm.environment.get(\"name\"));\r",
+							"        pm.expect(pass.lastname).to.eq(pm.environment.get(\"lastName\"));\r",
+							"        pm.expect(pass.dateOfBirth).to.eq(pm.environment.get(\"dateOfBirth\"));\r",
+							"        pm.expect(pass.docNumber).to.eq(pm.environment.get(\"docNumber\"));\r",
+							"        pm.expect(pass.docType).to.eq(pm.environment.get(\"docType\"));\r",
+							"        pm.expect(pass.countryISOAlpha3).to.eq(pm.environment.get(\"countryISOAlpha3\"));\r",
+							"        pm.expect(pass.nationalityISOAlpha3).to.eq(pm.environment.get(\"countryISOAlpha3\"));\r",
+							"        pm.expect(pass.paxType).to.eq(pm.environment.get(\"docType\"));\r",
+							"        pm.expect(pass.gender).to.eq(pm.environment.get(\"gender\"));\r",
+							"    })\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const dnmDateTime = Math.floor(new Date().getTime()/1000.0);\r",
+							"pm.environment.set(\"dnmDateTime\", dnmDateTime);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\": {\r\n        \"moveId\": \"{{moveId}}\",\r\n        \"dnmDateTime\": {{dnmDateTime}},\r\n        \"moveType\": \"{{moveType}}\",\r\n        \"name\": \"{{name}}\",\r\n        \"code2D\": \"{{code2Dcode2D}}\",\r\n        \"lastname\": \"{{lastName}}\",\r\n        \"dateOfBirth\": \"{{dateOfBirth}}\",\r\n        \"docNumber\": \"{{docNumber}}\",\r\n        \"photosDnms\": [\r\n            {\r\n                \"image\": \"{{imagen1}}\",\r\n                \"extension\": \"JPG\",\r\n                \"type\": \"CHIP\",\r\n                \"source\": \"DOCUMENT\",\r\n                \"side\": \"FRONT\"\r\n            },\r\n            {\r\n                \"image\": \"{{imagen2}}\",\r\n                \"extension\": \"JPG\",\r\n                \"type\": \"VISIBLE\",\r\n                \"source\": \"SCAN\",\r\n                \"side\": \"FRONT\"\r\n            }\r\n        ],\r\n        \"docType\": \"{{docType}}\",\r\n        \"countryISOAlpha3\": \"{{countryISOAlpha3}}\",\r\n        \"paxType\": \"{{docType}}\",\r\n        \"gender\": \"{{gender}}\",\r\n        \"nationalityISOAlpha3\": \"{{countryISOAlpha3}}\",\r\n        \"docExpirationDate\": \"0\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessDocumentEmbarkPassenger?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessDocumentEmbarkPassenger"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ProcessSyncEmbarkPassenger",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"ProcessSyncEmbarkPassenger\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeSyncEmbark.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageSyncEmbark.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessSyncEmbarkPassenger?userName={{userName}}&airportISOName=&terminalNames=",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessSyncEmbarkPassenger"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "airportISOName",
+							"value": ""
+						},
+						{
+							"key": "terminalNames",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ProcessMatch",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"ProcessMatch\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeProcessMatch.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageProcessMatch.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessMatch?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessMatch"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ProcessSimilar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"ProcessSimilar\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeProcessSimilar.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageProcessSimilar.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/ProcessSimilar?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"ProcessSimilar"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByDNMDocument",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"GetByDNMDocument\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetByDNMDocument.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetByDNMDocument.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"lastname\": \"string\",\r\n  \"countryISOAlpha3\": \"string\",\r\n  \"docType\": \"string\",\r\n  \"docNumber\": \"string\",\r\n  \"docExpirationDate\": \"string\",\r\n  \"personalNumber\": \"string\",\r\n  \"dateOfBirth\": \"string\",\r\n  \"nationalityISOAlpha3\": \"string\",\r\n  \"gender\": \"string\",\r\n  \"dnmDateTime\": 0,\r\n  \"code2D\": \"string\",\r\n  \"runwayId\": \"string\",\r\n  \"moveId\": \"string\",\r\n  \"moveType\": \"string\",\r\n  \"dnmLastUpdate\": 0,\r\n  \"airlineIataCode\": \"string\",\r\n  \"flightNumber\": \"string\",\r\n  \"seatLetter\": \"string\",\r\n  \"seatNumber\": \"string\",\r\n  \"paxType\": \"string\",\r\n  \"deleted\": true,\r\n  \"expiration\": 0,\r\n  \"photosDNMList\": [\r\n    {\r\n      \"id\": 0,\r\n      \"documentId\": 0,\r\n      \"photoTypeId\": 0,\r\n      \"photoType\": {\r\n        \"id\": 0,\r\n        \"dnmType\": \"string\",\r\n        \"extension\": \"string\",\r\n        \"dnmSource\": \"string\",\r\n        \"webType\": \"string\"\r\n      },\r\n      \"image\": \"string\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/MatchAndSimilarNames/GetByDNMDocument?userName={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"MatchAndSimilarNames",
+						"GetByDNMDocument"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTracking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"GetAllTracking\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllTracking.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllTracking.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/GetAllTracking?username={{userName}}&airlines=All",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"GetAllTracking"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "airlines",
+							"value": "All"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetModifiedTracking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"GetModifiedTracking\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetModifiedTracking.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetModifiedTracking.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/GetModifiedTracking?username={{userName}}&airlines=All",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"GetModifiedTracking"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "airlines",
+							"value": "All"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSimilarNamesAsync",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"GetSimilarNamesAsync\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetSimilarNamesAsync.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetSimilarNamesAsync.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/GetSimilarNamesAsync?username={{userName}}&airlines=All",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"GetSimilarNamesAsync"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "airlines",
+							"value": "All"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MatchDocumentBcbp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"MatchDocumentBcbp\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeMatchDocumentBcbp.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageMatchDocumentBcbp.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"paxMatch\": {\r\n    \"id\": 0,\r\n    \"bcbpId\": 0,\r\n    \"documentId\": 0,\r\n    \"lastUpdate\": 0,\r\n    \"matchType\": \"string\",\r\n    \"submissionToGalleryType\": \"string\",\r\n    \"validationType\": \"string\",\r\n    \"manualProcess\": true,\r\n    \"sbgEnabled\": true,\r\n    \"expiration\": 0,\r\n    \"deleted\": true\r\n  },\r\n  \"bcbp\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatNumber\": \"string\",\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"date\": \"string\",\r\n    \"stdaJul\": 0,\r\n    \"stda\": 0,\r\n    \"code2D\": \"string\",\r\n    \"pocDateTime\": 0,\r\n    \"runwayId\": \"string\",\r\n    \"bcbpLastUpdate\": 0,\r\n    \"vipCode\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ]\r\n  },\r\n  \"document\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"countryISOAlpha3\": \"string\",\r\n    \"docType\": \"string\",\r\n    \"docNumber\": \"string\",\r\n    \"docExpirationDate\": \"string\",\r\n    \"personalNumber\": \"string\",\r\n    \"dateOfBirth\": \"string\",\r\n    \"nationalityISOAlpha3\": \"string\",\r\n    \"gender\": \"string\",\r\n    \"dnmDateTime\": 0,\r\n    \"code2D\": \"string\",\r\n    \"runwayId\": \"string\",\r\n    \"moveId\": \"string\",\r\n    \"moveType\": \"string\",\r\n    \"dnmLastUpdate\": 0,\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatnumber\": \"string\",\r\n    \"paxType\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ],\r\n    \"photosDNMList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"documentId\": 0,\r\n        \"photoTypeId\": 0,\r\n        \"photoType\": {\r\n          \"id\": 0,\r\n          \"dnmType\": \"string\",\r\n          \"extension\": \"string\",\r\n          \"dnmSource\": \"string\",\r\n          \"webType\": \"string\"\r\n        },\r\n        \"image\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/MatchDocumentBcbp?username={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"MatchDocumentBcbp"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UnmatchDocumentBcbp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"UnmatchDocumentBcbp\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeUnmatchDocumentBcbp.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageUnmatchDocumentBcbp.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"paxMatch\": {\r\n    \"id\": 0,\r\n    \"bcbpId\": 0,\r\n    \"documentId\": 0,\r\n    \"lastUpdate\": 0,\r\n    \"matchType\": \"string\",\r\n    \"submissionToGalleryType\": \"string\",\r\n    \"validationType\": \"string\",\r\n    \"manualProcess\": true,\r\n    \"sbgEnabled\": true,\r\n    \"expiration\": 0,\r\n    \"deleted\": true\r\n  },\r\n  \"bcbp\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatNumber\": \"string\",\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"date\": \"string\",\r\n    \"stdaJul\": 0,\r\n    \"stda\": 0,\r\n    \"code2D\": \"string\",\r\n    \"pocDateTime\": 0,\r\n    \"runwayId\": \"string\",\r\n    \"bcbpLastUpdate\": 0,\r\n    \"vipCode\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ]\r\n  },\r\n  \"document\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"countryISOAlpha3\": \"string\",\r\n    \"docType\": \"string\",\r\n    \"docNumber\": \"string\",\r\n    \"docExpirationDate\": \"string\",\r\n    \"personalNumber\": \"string\",\r\n    \"dateOfBirth\": \"string\",\r\n    \"nationalityISOAlpha3\": \"string\",\r\n    \"gender\": \"string\",\r\n    \"dnmDateTime\": 0,\r\n    \"code2D\": \"string\",\r\n    \"runwayId\": \"string\",\r\n    \"moveId\": \"string\",\r\n    \"moveType\": \"string\",\r\n    \"dnmLastUpdate\": 0,\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatnumber\": \"string\",\r\n    \"paxType\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ],\r\n    \"photosDNMList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"documentId\": 0,\r\n        \"photoTypeId\": 0,\r\n        \"photoType\": {\r\n          \"id\": 0,\r\n          \"dnmType\": \"string\",\r\n          \"extension\": \"string\",\r\n          \"dnmSource\": \"string\",\r\n          \"webType\": \"string\"\r\n        },\r\n        \"image\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/UnmatchDocumentBcbp?username={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"UnmatchDocumentBcbp"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddTrackingToGallery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"AddTrackingToGallery\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeAddTrackingToGallery.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageAddTrackingToGallery.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"paxMatch\": {\r\n    \"id\": 0,\r\n    \"bcbpId\": 0,\r\n    \"documentId\": 0,\r\n    \"lastUpdate\": 0,\r\n    \"matchType\": \"string\",\r\n    \"submissionToGalleryType\": \"string\",\r\n    \"validationType\": \"string\",\r\n    \"manualProcess\": true,\r\n    \"sbgEnabled\": true,\r\n    \"expiration\": 0,\r\n    \"deleted\": true\r\n  },\r\n  \"bcbp\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatNumber\": \"string\",\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"date\": \"string\",\r\n    \"stdaJul\": 0,\r\n    \"stda\": 0,\r\n    \"code2D\": \"string\",\r\n    \"pocDateTime\": 0,\r\n    \"runwayId\": \"string\",\r\n    \"bcbpLastUpdate\": 0,\r\n    \"vipCode\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ]\r\n  },\r\n  \"document\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"countryISOAlpha3\": \"string\",\r\n    \"docType\": \"string\",\r\n    \"docNumber\": \"string\",\r\n    \"docExpirationDate\": \"string\",\r\n    \"personalNumber\": \"string\",\r\n    \"dateOfBirth\": \"string\",\r\n    \"nationalityISOAlpha3\": \"string\",\r\n    \"gender\": \"string\",\r\n    \"dnmDateTime\": 0,\r\n    \"code2D\": \"string\",\r\n    \"runwayId\": \"string\",\r\n    \"moveId\": \"string\",\r\n    \"moveType\": \"string\",\r\n    \"dnmLastUpdate\": 0,\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatnumber\": \"string\",\r\n    \"paxType\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ],\r\n    \"photosDNMList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"documentId\": 0,\r\n        \"photoTypeId\": 0,\r\n        \"photoType\": {\r\n          \"id\": 0,\r\n          \"dnmType\": \"string\",\r\n          \"extension\": \"string\",\r\n          \"dnmSource\": \"string\",\r\n          \"webType\": \"string\"\r\n        },\r\n        \"image\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/AddTrackingToGallery?username={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"AddTrackingToGallery"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveTrackingFromGallery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"RemoveTrackingFromGallery\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeRemoveTrackingFromGallery.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageRemoveTrackingFromGallery.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"paxMatch\": {\r\n    \"id\": 0,\r\n    \"bcbpId\": 0,\r\n    \"documentId\": 0,\r\n    \"lastUpdate\": 0,\r\n    \"matchType\": \"string\",\r\n    \"submissionToGalleryType\": \"string\",\r\n    \"validationType\": \"string\",\r\n    \"manualProcess\": true,\r\n    \"sbgEnabled\": true,\r\n    \"expiration\": 0,\r\n    \"deleted\": true\r\n  },\r\n  \"bcbp\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatNumber\": \"string\",\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"date\": \"string\",\r\n    \"stdaJul\": 0,\r\n    \"stda\": 0,\r\n    \"code2D\": \"string\",\r\n    \"pocDateTime\": 0,\r\n    \"runwayId\": \"string\",\r\n    \"bcbpLastUpdate\": 0,\r\n    \"vipCode\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ]\r\n  },\r\n  \"document\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\",\r\n    \"lastname\": \"string\",\r\n    \"countryISOAlpha3\": \"string\",\r\n    \"docType\": \"string\",\r\n    \"docNumber\": \"string\",\r\n    \"docExpirationDate\": \"string\",\r\n    \"personalNumber\": \"string\",\r\n    \"dateOfBirth\": \"string\",\r\n    \"nationalityISOAlpha3\": \"string\",\r\n    \"gender\": \"string\",\r\n    \"dnmDateTime\": 0,\r\n    \"code2D\": \"string\",\r\n    \"runwayId\": \"string\",\r\n    \"moveId\": \"string\",\r\n    \"moveType\": \"string\",\r\n    \"dnmLastUpdate\": 0,\r\n    \"airlineIataCode\": \"string\",\r\n    \"flightNumber\": \"string\",\r\n    \"seatLetter\": \"string\",\r\n    \"seatnumber\": \"string\",\r\n    \"paxType\": \"string\",\r\n    \"deleted\": true,\r\n    \"expiration\": 0,\r\n    \"paxMatch\": {\r\n      \"id\": 0,\r\n      \"bcbpId\": 0,\r\n      \"documentId\": 0,\r\n      \"lastUpdate\": 0,\r\n      \"matchType\": \"string\",\r\n      \"submissionToGalleryType\": \"string\",\r\n      \"validationType\": \"string\",\r\n      \"manualProcess\": true,\r\n      \"sbgEnabled\": true,\r\n      \"expiration\": 0,\r\n      \"deleted\": true\r\n    },\r\n    \"similarList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"bcbpId\": 0,\r\n        \"documentId\": 0,\r\n        \"algorithmId\": 0,\r\n        \"algorithm\": {\r\n          \"id\": 0,\r\n          \"name\": \"string\"\r\n        },\r\n        \"percentaje\": 0\r\n      }\r\n    ],\r\n    \"photosDNMList\": [\r\n      {\r\n        \"id\": 0,\r\n        \"documentId\": 0,\r\n        \"photoTypeId\": 0,\r\n        \"photoType\": {\r\n          \"id\": 0,\r\n          \"dnmType\": \"string\",\r\n          \"extension\": \"string\",\r\n          \"dnmSource\": \"string\",\r\n          \"webType\": \"string\"\r\n        },\r\n        \"image\": \"string\"\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/RemoveTrackingFromGallery?username={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"RemoveTrackingFromGallery"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetNumberPassProcess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(\"GetNumberPassProcess\", jsonData)\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetNumberPassProcess.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetNumberPassProcess.toString());\r",
+							"});\r",
+							"postman.setNextRequest(null)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{torino.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{torino.url}}/api/Tracking/GetNumberPassProcess?username={{userName}}",
+					"host": [
+						"{{torino.url}}"
+					],
+					"path": [
+						"api",
+						"Tracking",
+						"GetNumberPassProcess"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"/**I assign the values to the parameters of the url from the json file*/",
+					"/*const keys = Object.keys(data);",
+					"keys.map((key) => {",
+					"    pm.environment.set(key, data[key]);",
+					"})",
+					"pm.environment.unset(\"_services\");",
+					"pm.environment.unset(\"_comment\");",
+					"pm.environment.unset(\"index\");*/",
+					"",
+					"pm.environment.set(\"moveId\", data.moveId);",
+					"pm.environment.set(\"docNumber\", data.docNumber);",
+					"pm.environment.set(\"gender\", data.gender);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
