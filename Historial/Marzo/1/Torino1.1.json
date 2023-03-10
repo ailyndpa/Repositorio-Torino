@@ -1,6 +1,6 @@
 [
     {   
-        "_services": "ProcessPocEmbarkPassenger/ProcessDocumentEmbarkPassenger/ProcessSyncEmbarkPassenger/ProcessMatch/ProcessSimilar/GetByDNMDocument/GetAllTracking/GetModifiedTracking/GetSimilarNamesAsync/MatchDocumentBcbp/UnmatchDocumentBcbp/AddTrackingToGallery/RemoveTrackingFromGallery/GetNumberPassProcess",
+        "_services": "ProcessPocEmbarkPassenger/ProcessDocumentEmbarkPassenger/ProcessSyncEmbarkPassenger/MatchDocumentBcbp/AddTrackingToGallery/ProcessMatch/ProcessSimilar/GetByDNMDocument/GetAllTracking/OnlyIDs/Passenger/GetModifiedTracking/GetSimilarNamesAsync/RemoveTrackingFromGallery/UnmatchDocumentBcbp/GetNumberPassProcess",
         "_comment": "Validando respuestas adecuada para userName nulo",
         "index": 1,
         "userName": null,
